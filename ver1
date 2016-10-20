@@ -1,0 +1,38 @@
+#include <stdio.h> #include <math.h> #include <stdlib.h>  
+double erro(double lamd0, double lamd1);//每步迭代结束后计算误差的函数 
+void diedai(double a[], double b, double c, double *x0, double *x1);//幂法迭代函数 double dianji(double x[], double y[]);//计算两个向量内积的函数 int main() { 
+ double a[501]={0},x[505]={0.0}, y[505]={0.0}, b=0.16, c=-0.064, lamd=0, lamd0=0, lamd1=0,e1=0, d=0,*x1=y, *x0=x, *t; 
+ int i,k1,k2;      //变量定义即初始化，其中一维数组x，y用于存储每步迭代后的向量，指针变量x0，x1用于存取x，y的地址用于迭代计算。为了迭代格式的统一，对初始向量首尾各扩充了两个零元素 
+ for (int i = 1; i < 502; ++i)  {   a[i-1]=(1.64-i*0.024)*sin(0.2*i)-0.64*exp(0.1/i);   x[i+1]=1;//赋值初始迭代向量 
+ } 
+ for (i = 0; i <10000; ++i)   {    d=sqrt(dianji(x0,x0));//计算初始向量也即uk-1 的2范数    for(int j=2;j<503;j++)   {    x0[j]=x0[j]/d;//计算yk-1 
+  } 
+   diedai(a,b,c,x0,x1);//根据向量yk-1计算x1，uk 
+  lamd1=dianji(x0,x1);//计算yk-1，uk 的内积，即βk     e1=erro(lamd0,lamd1);//计算误差    if (e1<1e-12)        //判断是否收敛    {    
+ 
+lamd=lamd1;
+    break; 
+   } 
+  else              //未收敛则将uk ，βk用于下次迭代    t=x0;    x0=x1;    x1=t;    
+lamd0=lamd1;   }    k1=i-1; 
+  for (int i = 0; i < 501; ++i)   {    a[i]=a[i]-lamd; //以第一次计算结果为平移量进行幂法迭代    x[501+1]=i;   } 
+  for (i = 0; i <100000; ++i)   {    d=sqrt(dianji(x0,x0));    for(int j=2;j<503;j++)   {    x0[j]=x0[j]/d; 
+  } 
+   diedai(a,b,c,x0,x1);   lamd1=dianji(x0,x1);    e1=erro(lamd0,lamd1);    if (e1<1e-12)    {     lamd1=lamd1+lamd;     k2=i;//记录迭代步数     break;    }   else    t=x0;    x0=x1;    x1=t;    
+lamd0=lamd1;  }  
+ lamd1=lamd1+lamd;  k2=i; 
+ printf("lamd1= %20.12e, 
+K1=%d\nlamd501= 
+%20.12e, 
+K2=%d\n",lamd<lamd1?lamd:lamd1,lamd<lamd1?k1:k2,lamd>lamd1?lamd:lamd1,lamd>lamd1?k1:k2); //
+输出结果 
+ system("pause");  return 0; }
+ double dianji(double x[], double y[])//定义向量内积 { 
+ double e=0; 
+ for (int i = 2; i < 503; ++i)  {   e=e+x[i]*y[i]; 
+ } 
+ return(e); } 
+double erro(double lamd0, double lamd1)//计算两个数之间的相对误差 { 
+ double e, d, l;  e=fabs(lamd1-lamd0);  d=fabs(lamd1);  l=e/d;  return(l); }  
+void diedai(double a[], double b, double c, double *x0, double *x1) { 
+ for (int i = 0; i < 501; ++i)  {   x1[i+2]=c*x0[i]+b*x0[i+1]+a[i]*x0[i+2]+b*x0[i+3]+c*x0[i+4];//计算uk=Ayk-1  } }
