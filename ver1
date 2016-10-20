@@ -1,6 +1,10 @@
-#include <stdio.h> #include <math.h> #include <stdlib.h>  
+#include <stdio.h> 
+#include <math.h> 
+#include <stdlib.h>  
 double erro(double lamd0, double lamd1);//每步迭代结束后计算误差的函数 
-void diedai(double a[], double b, double c, double *x0, double *x1);//幂法迭代函数 double dianji(double x[], double y[]);//计算两个向量内积的函数 int main() { 
+void diedai(double a[], double b, double c, double *x0, double *x1);//幂法迭代函数 
+double dianji(double x[], double y[]);//计算两个向量内积的函数 
+int main() { 
  double a[501]={0},x[505]={0.0}, y[505]={0.0}, b=0.16, c=-0.064, lamd=0, lamd0=0, lamd1=0,e1=0, d=0,*x1=y, *x0=x, *t; 
  int i,k1,k2;      //变量定义即初始化，其中一维数组x，y用于存储每步迭代后的向量，指针变量x0，x1用于存取x，y的地址用于迭代计算。为了迭代格式的统一，对初始向量首尾各扩充了两个零元素 
  for (int i = 1; i < 502; ++i)  {   a[i-1]=(1.64-i*0.024)*sin(0.2*i)-0.64*exp(0.1/i);   x[i+1]=1;//赋值初始迭代向量 
